@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PhotoUploader.MainPage"
+             Title="Фото → Mac">
+    <ScrollView>
+        <VerticalStackLayout Spacing="12" Padding="24">
+            <Label Text="Отправка фото на компьютер"
+                   FontAttributes="Bold"
+                   FontSize="24" />
+
+            <Entry x:Name="ServerEntry"
+                   Placeholder="http://<ip-mac>:5000/upload"
+                   Keyboard="Url" />
+
+            <HorizontalStackLayout Spacing="12">
+                <Button Text="Сделать фото" Clicked="OnCapturePhoto" />
+                <Button Text="Выбрать из галереи" Clicked="OnPickPhoto" />
+            </HorizontalStackLayout>
+
+            <Button Text="Отправить фото"
+                    Clicked="OnSendPhoto"
+                    x:Name="SendButton"
+                    IsEnabled="False" />
+
+            <Frame HasShadow="False" BorderColor="#ccc" Padding="8" BackgroundColor="#fafafa">
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="Выбранное фото:" FontAttributes="Bold" />
+                    <Image x:Name="Preview" HeightRequest="220" Aspect="AspectFill" />
+                    <Label x:Name="FileInfoLabel" FontSize="12" TextColor="#666" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <Label x:Name="StatusLabel"
+                   FontAttributes="Bold"
+                   TextColor="#006400" />
+            <Label x:Name="ErrorLabel"
+                   TextColor="#B00020" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
