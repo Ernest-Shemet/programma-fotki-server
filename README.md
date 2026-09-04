@@ -1,47 +1,66 @@
-# programma-fotki-server
+# Photo Uploader — .NET MAUI + Python
 
-Набор для простой схемы: на iOS-приложении (MAUI, C#) делаем/выбираем фото и отправляем его по HTTP на ваш Mac. На Mac — минимальный Python-сервер, который принимает `POST /upload` и кладёт файл в выбранную папку.
+A small client-server project for transferring photos from an iOS device to a computer over HTTP.
 
-## Состав
-- `client/` — файлы экрана для .NET MAUI (iOS). Подставляются в созданный шаблон.
-- `server/receiver.py` — приёмник на Python без внешних библиотек.
+The mobile client is built with **.NET MAUI / C#**. It can take a photo or select one from the gallery and upload it to a lightweight **Python HTTP server** running on a Mac or another computer in the same network.
 
-## Быстрый старт: сервер на Mac
+## Tech stack
+
+- C# / .NET MAUI
+- Python 3
+- HTTP multipart upload
+- iOS camera and photo-library APIs
+
+## Project structure
+
+```text
+client/             .NET MAUI UI and client-side upload logic
+server/receiver.py  lightweight Python upload server
+```
+
+## Run the server
+
 ```bash
 cd server
 python3 receiver.py --port 5000 --output ~/Desktop/received_photos
 ```
-Папка создастся автоматически. Проверка без приложения:
+
+Test it without the mobile app:
+
 ```bash
-curl -X POST -F "file=@/path/to/pic.jpg" http://<ip-mac>:5000/upload
+curl -X POST -F "file=@/path/to/photo.jpg" http://<computer-ip>:5000/upload
 ```
 
-## Быстрый старт: клиент iOS (MAUI)
-1) Установите MAUI workload (понадобится интернет, Xcode):  
-   `dotnet workload install maui`
-2) Создайте шаблон:  
-   ```bash
-   dotnet new maui -n PhotoUploader
-   cd PhotoUploader
-   ```
-3) Замените `MainPage.xaml` и `MainPage.xaml.cs` на файлы из папки `client` этого репо.
-4) В `Platforms/iOS/Info.plist` добавьте ключи:
-   ```xml
-   <key>NSCameraUsageDescription</key>
-   <string>Нужно, чтобы делать снимки и отправлять их на компьютер.</string>
-   <key>NSPhotoLibraryUsageDescription</key>
-   <string>Нужно, чтобы выбрать фото и отправить его на компьютер.</string>
-   <key>NSPhotoLibraryAddUsageDescription</key>
-   <string>Нужно, чтобы сохранять снимки в медиатеку.</string>
-   ```
-5) Запуск на устройстве:  
-   `dotnet build -t:Run -f net8.0-ios`
+## Run the iOS client
 
-## Использование приложения
-- Введите адрес сервера, например `http://<ip-mac>:5000/upload`.
-- Нажмите «Сделать фото» или «Выбрать из галереи» — появится предпросмотр.
-- Нажмите «Отправить фото» — файл уйдёт на сервер, ответ покажется текстом.
+Install the MAUI workload and create a project:
 
-## Замечания
-- Телефон и Mac должны быть в одной сети, порт 5000 не должен блокироваться.
-- Разрешения на камеру/фотографии запросит система при первом использовании.
+```bash
+dotnet workload install maui
+dotnet new maui -n PhotoUploader
+cd PhotoUploader
+```
+
+Use the files from `client/` in the generated project and configure the required iOS camera/photo-library permissions in `Info.plist`.
+
+Run on an iOS device:
+
+```bash
+dotnet build -t:Run -f net8.0-ios
+```
+
+## How it works
+
+1. Enter the upload endpoint, for example `http://<computer-ip>:5000/upload`.
+2. Take a photo or choose one from the gallery.
+3. Preview the selected image.
+4. Upload it to the server.
+5. The Python server stores the received file in the configured directory.
+
+## Notes
+
+The phone and computer should be reachable over the same network, and the selected server port must be accessible through the local firewall.
+
+---
+
+Student project by Ernest Shemet.
